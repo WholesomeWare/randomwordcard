@@ -6,6 +6,7 @@
     import { firestoreCard } from "$lib/firebase/FirestoreCard.svelte";
     import IconButton from "$lib/components/IconButton.svelte";
     import Fab from "$lib/components/Fab.svelte";
+    import { getWords } from "$lib/wordsProvider";
 
     let card = $state(firestoreCard(null));
 
@@ -17,23 +18,7 @@
 
         randomColor = `rgb(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)})`;
 
-        getWordPacks((wordPacks) => {
-            randomWords =
-                card?.value?.activeWordPacks
-                    .map((wordPackId) => {
-                        const words: string[] =
-                            wordPacks.find(
-                                (wordPack) => wordPack.id === wordPackId,
-                            )?.words ?? [];
-
-                        return words[Math.floor(Math.random() * words.length)];
-                    })
-                    .filter((word) => word !== undefined) ?? [];
-            card.value = {
-                ...card.value,
-                history: [randomWords.join(", "), ...card.value.history],
-            };
-        });
+        getWords(card, (words) => randomWords = words);
     });
 </script>
 
@@ -45,9 +30,10 @@
             {/each}
         </div>
         <div class="card-actions">
-            <IconButton path={mdiRefresh} onclick={() => location.reload()} />
+            <IconButton path={mdiRefresh} size={32} onclick={() => location.reload()} />
             <IconButton
                 path={mdiCog}
+                size={32}
                 onclick={() =>
                     (window.location = `./settings/?cardId=${$page.url.searchParams.get("cardId")}`)}
             />
@@ -91,6 +77,7 @@
         position: absolute;
         top: 0;
         right: 0;
+        opacity: .3;
     }
 
     .card-words {

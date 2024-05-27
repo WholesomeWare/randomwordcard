@@ -23,7 +23,6 @@ export class FirestoreCard {
                         this.value = { ...new Card(), ...doc.data(), id: doc.id };
                     }
                     this.#isReady = true;
-                    console.log("Card loaded:", this.value);
                 })
                 .catch((error) => {
                     console.error("Error getting document:", error);

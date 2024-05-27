@@ -12,4 +12,8 @@
         background-color: #282828;
         color: white;
     }
+
+    :global(li) {
+        margin-left: 1rem;
+    }
 </style>

@@ -36,5 +36,7 @@
         color: #ffffff;
         border: none;
         border-radius: 1rem;
+        overflow-y: auto;
+        box-shadow: 0 0 1rem rgba(0, 0, 0, 0.5);
     }
 </style>
