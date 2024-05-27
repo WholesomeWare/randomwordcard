@@ -1,17 +1,13 @@
 <script lang="ts">
-    import { createEventDispatcher } from "svelte";
-
-
     import Icon from "./Icon.svelte";
 
     export let style: string = "";
     export let path: string;
-
-    const dispatch = createEventDispatcher();
+    export let onclick: () => void;
 
 </script>
 
-<button {style} on:click={() => dispatch("click")}>
+<button {style} onclick={onclick}>
     <Icon {path} />
 </button>
 

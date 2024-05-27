@@ -1,5 +1,4 @@
 <script lang="ts">
-    import { createEventDispatcher } from "svelte";
     import Icon from "./Icon.svelte";
 
     export let style: string = "";
@@ -7,11 +6,11 @@
     export let contentColor: string = "#000000";
     export let iconPath: string;
     export let text: string = "";
+    export let onclick: () => void;
 
-    const dispatch = createEventDispatcher();
 </script>
 
-<button style="background-color: {containerColor}; color: {contentColor}; {style}" on:click={() => dispatch("click")}>
+<button style="background-color: {containerColor}; color: {contentColor}; {style}" onclick={onclick}>
     <Icon path={iconPath} color={contentColor} />
     {text}
 </button>

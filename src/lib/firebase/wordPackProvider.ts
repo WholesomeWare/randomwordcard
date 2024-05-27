@@ -1,5 +1,5 @@
 import { collection, getDocs } from "firebase/firestore";
-import { initializeFirebase } from "./firebase.app";
+import { initializeFirebase } from "./firebase";
 import WordPack from "$lib/model/WordPack";
 import { browser } from "$app/environment";
 

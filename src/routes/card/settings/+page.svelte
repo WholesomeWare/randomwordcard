@@ -21,27 +21,22 @@
     import IconButton from "$lib/components/IconButton.svelte";
 
     let cardId: string | null = $state(null);
-    let card: FirestoreCard | null = $state(null);
+    let card = firestoreCard($page.url.searchParams.get("cardId"));
     let wordPacks: WordPack[] = $state([]);
 
     let isAddWordPackDialogOpen: boolean = $state(false);
 
     onMount(() => {
-        cardId = $page.url.searchParams.get("cardId");
-        if (!cardId) {
-            throw new Error("cardId is required");
-        }
-        card = firestoreCard(cardId);
-        if (!card) {
-            throw new Error("card not found");
-        }
         getWordPacks((newWordPacks) => (wordPacks = newWordPacks));
     });
 
-    let activeWordPacks = $derived(
-        (card?.value?.activeWordPacks ?? []).map((wordPackId) =>
-            wordPacks.find((wordPack) => wordPack.id === wordPackId),
-        ),
+    let activeWordPacks: WordPack[] = $derived(
+        (card?.value?.activeWordPacks ?? [])
+            .map((wordPackId) =>
+                wordPacks.find((wordPack) => wordPack.id === wordPackId),
+            )
+            .filter((wordPack) => wordPack !== undefined)
+            .map((wordPack) => wordPack as WordPack),
     );
 </script>
 
@@ -49,29 +44,31 @@
     <Fab
         iconPath={mdiArrowLeft}
         text="Vissza"
-        on:click={() => (window.location = `../?cardId=${cardId}`)}
+        onclick={() =>
+            (window.location = `../?cardId=${$page.url.searchParams.get("cardId")}`)}
     />
-    <h2>Szó csomagok ({card?.value?.activeWordPacks?.length ?? 0})</h2>
-    {#each activeWordPacks as wordPack}
+    <h2>Szó csomagok ({activeWordPacks.length ?? 0})</h2>
+    {#each activeWordPacks as wordPack, index}
         <div class="wordPackDisplay">
             <Icon path={mdiListBox} />
             <p>{wordPack.name} ({wordPack.words.length})</p>
             <IconButton
                 path={mdiClose}
-                on:click={() =>
-                    (card.value = {
+                onclick={() => {
+                    card.value = {
                         ...card.value,
                         activeWordPacks: card.value.activeWordPacks.filter(
-                            (id) => id !== wordPack.id,
+                            (wordPackId, i) => i !== index,
                         ),
-                    })}
+                    };
+                }}
             />
         </div>
     {/each}
     <Fab
         iconPath={mdiPlus}
         text="Szó csomag hozzáadása"
-        on:click={() => (isAddWordPackDialogOpen = true)}
+        onclick={() => (isAddWordPackDialogOpen = true)}
     />
 </main>
 
@@ -82,7 +79,7 @@
             <p>{wordPack.name} ({wordPack.words.length})</p>
             <IconButton
                 path={mdiPlus}
-                on:click={() => {
+                onclick={() => {
                     card.value = {
                         ...card.value,
                         activeWordPacks: [

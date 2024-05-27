@@ -8,25 +8,14 @@
         FirestoreCard,
         firestoreCard,
     } from "$lib/firebase/FirestoreCard.svelte";
-    import { goto } from "$app/navigation";
     import IconButton from "$lib/components/IconButton.svelte";
 
-    let cardId: string | null = null;
-    let card: FirestoreCard | null = null;
+    let card = firestoreCard($page.url.searchParams.get("cardId"));
 
     let randomColor = "white";
     let randomWords: string[] = [];
 
     onMount(() => {
-        cardId = $page.url.searchParams.get("cardId");
-        if (cardId === null) {
-            throw new Error("cardId is required");
-        }
-        card = firestoreCard(cardId);
-        if (card === null) {
-            throw new Error("card not found");
-        }
-
         randomColor = `rgb(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)})`;
 
         getWordPacks((wordPacks) => {
@@ -52,10 +41,10 @@
         {/each}
     </div>
     <div class="card-actions">
-        <IconButton path={mdiRefresh} on:click={() => location.reload()} />
+        <IconButton path={mdiRefresh} onclick={() => location.reload()} />
         <IconButton
             path={mdiCog}
-            on:click={() => (window.location = `./settings/?cardId=${cardId}`)}
+            onclick={() => (window.location = `./settings/?cardId=${$page.url.searchParams.get("cardId")}`)}
         />
     </div>
 </div>
