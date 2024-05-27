@@ -3,19 +3,19 @@
     import { page } from "$app/stores";
     import { getWordPacks } from "$lib/firebase/wordPackProvider";
     import { mdiCog, mdiRefresh } from "@mdi/js";
-    import Icon from "$lib/components/Icon.svelte";
     import {
-        FirestoreCard,
         firestoreCard,
     } from "$lib/firebase/FirestoreCard.svelte";
     import IconButton from "$lib/components/IconButton.svelte";
 
-    let card = firestoreCard($page.url.searchParams.get("cardId"));
+    let card = $state(firestoreCard(null));
 
-    let randomColor = "white";
-    let randomWords: string[] = [];
+    let randomColor = $state("white");
+    let randomWords: string[] = $state([]);
 
     onMount(() => {
+        card = firestoreCard($page.url.searchParams.get("cardId"));
+
         randomColor = `rgb(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)})`;
 
         getWordPacks((wordPacks) => {

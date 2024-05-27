@@ -12,9 +12,9 @@ export class FirestoreCard {
     cardId: string;
 
     constructor(cardId: string | null) {
-        if (!cardId) throw new Error("Card ID is required");
+        this.cardId = cardId ?? "";
 
-        this.cardId = cardId;
+        if (!cardId) return;
 
         if (browser) {
             getDoc(doc(this.#firestore, "cards", cardId))

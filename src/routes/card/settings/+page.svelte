@@ -20,13 +20,13 @@
     import Dialog from "$lib/components/Dialog.svelte";
     import IconButton from "$lib/components/IconButton.svelte";
 
-    let cardId: string | null = $state(null);
-    let card = firestoreCard($page.url.searchParams.get("cardId"));
+    let card = $state(firestoreCard(null));
     let wordPacks: WordPack[] = $state([]);
 
     let isAddWordPackDialogOpen: boolean = $state(false);
 
     onMount(() => {
+        card = firestoreCard($page.url.searchParams.get("cardId"));
         getWordPacks((newWordPacks) => (wordPacks = newWordPacks));
     });
 
