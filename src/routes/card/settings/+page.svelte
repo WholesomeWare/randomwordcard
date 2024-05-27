@@ -19,6 +19,7 @@
     import Icon from "$lib/components/Icon.svelte";
     import Dialog from "$lib/components/Dialog.svelte";
     import IconButton from "$lib/components/IconButton.svelte";
+    import WordPackDisplay from "$lib/components/WordPackDisplay.svelte";
 
     let card = $state(firestoreCard(null));
     let wordPacks: WordPack[] = $state([]);
@@ -48,22 +49,31 @@
             (window.location = `../?cardId=${$page.url.searchParams.get("cardId")}`)}
     />
     <h2>Szó csomagok ({activeWordPacks.length ?? 0})</h2>
+    <p>
+        Ha egy csomagból több szót szeretnél egyszerre látni, akkor add hozzá a
+        kártyához többször ugyanazt a csomagot.
+    </p>
     {#each activeWordPacks as wordPack, index}
-        <div class="wordPackDisplay">
-            <Icon path={mdiListBox} />
-            <p>{wordPack.name} ({wordPack.words.length})</p>
-            <IconButton
-                path={mdiClose}
-                onclick={() => {
-                    card.value = {
-                        ...card.value,
-                        activeWordPacks: card.value.activeWordPacks.filter(
-                            (wordPackId, i) => i !== index,
-                        ),
-                    };
-                }}
-            />
-        </div>
+        <WordPackDisplay
+            {wordPack}
+            onAdd={() => {
+                card.value = {
+                    ...card.value,
+                    activeWordPacks: [
+                        ...card.value.activeWordPacks,
+                        wordPack.id,
+                    ],
+                };
+            }}
+            onRemove={() => {
+                card.value = {
+                    ...card.value,
+                    activeWordPacks: card.value.activeWordPacks.filter(
+                        (wordPackId, i) => i !== index,
+                    ),
+                };
+            }}
+        />
     {/each}
     <Fab
         iconPath={mdiPlus}
@@ -73,25 +83,27 @@
 </main>
 
 <Dialog open={isAddWordPackDialogOpen}>
+    <h3>Szó csomagok</h3>
     {#each wordPacks as wordPack}
-        <div class="wordPackDisplay">
-            <Icon path={mdiListBox} />
-            <p>{wordPack.name} ({wordPack.words.length})</p>
-            <IconButton
-                path={mdiPlus}
-                onclick={() => {
-                    card.value = {
-                        ...card.value,
-                        activeWordPacks: [
-                            ...card.value.activeWordPacks,
-                            wordPack.id,
-                        ],
-                    };
-                    isAddWordPackDialogOpen = false;
-                }}
-            />
-        </div>
+        <WordPackDisplay
+            {wordPack}
+            onAdd={() => {
+                card.value = {
+                    ...card.value,
+                    activeWordPacks: [
+                        ...card.value.activeWordPacks,
+                        wordPack.id,
+                    ],
+                };
+                isAddWordPackDialogOpen = false;
+            }}
+        />
     {/each}
+    <Fab
+        iconPath={mdiClose}
+        text="Mégsem"
+        onclick={() => (isAddWordPackDialogOpen = false)}
+    />
 </Dialog>
 
 <style>
@@ -101,20 +113,5 @@
         padding: 1rem;
         gap: 1rem;
         color: white;
-    }
-
-    .wordPackDisplay {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: space-between;
-        gap: 1rem;
-        padding: 1rem;
-        background-color: white;
-        border-radius: 0.5rem;
-    }
-
-    .wordPackDisplay * {
-        color: black;
     }
 </style>

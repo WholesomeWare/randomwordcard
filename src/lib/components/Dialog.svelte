@@ -25,10 +25,14 @@
     }
 
     dialog {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
         position: relative;
-        background-color: #282828;
+        background-color: #323232;
         padding: 1rem;
         width: calc(100vw - 3rem);
+        max-height: 80svh;
         color: #ffffff;
         border: none;
         border-radius: 1rem;

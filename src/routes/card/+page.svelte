@@ -2,11 +2,10 @@
     import { onMount } from "svelte";
     import { page } from "$app/stores";
     import { getWordPacks } from "$lib/firebase/wordPackProvider";
-    import { mdiCog, mdiRefresh } from "@mdi/js";
-    import {
-        firestoreCard,
-    } from "$lib/firebase/FirestoreCard.svelte";
+    import { mdiCog, mdiDelete, mdiRefresh } from "@mdi/js";
+    import { firestoreCard } from "$lib/firebase/FirestoreCard.svelte";
     import IconButton from "$lib/components/IconButton.svelte";
+    import Fab from "$lib/components/Fab.svelte";
 
     let card = $state(firestoreCard(null));
 
@@ -30,29 +29,57 @@
                         return words[Math.floor(Math.random() * words.length)];
                     })
                     .filter((word) => word !== undefined) ?? [];
+            card.value = {
+                ...card.value,
+                history: [randomWords.join(", "), ...card.value.history],
+            };
         });
     });
 </script>
 
-<div class="card" style="background-color: {randomColor};">
-    <div class="card-words">
-        {#each randomWords as word}
-            <h1>{word}</h1>
-        {/each}
+<main>
+    <div class="card" style="background-color: {randomColor};">
+        <div class="card-words">
+            {#each randomWords as word}
+                <h1>{word}</h1>
+            {/each}
+        </div>
+        <div class="card-actions">
+            <IconButton path={mdiRefresh} onclick={() => location.reload()} />
+            <IconButton
+                path={mdiCog}
+                onclick={() =>
+                    (window.location = `./settings/?cardId=${$page.url.searchParams.get("cardId")}`)}
+            />
+        </div>
     </div>
-    <div class="card-actions">
-        <IconButton path={mdiRefresh} onclick={() => location.reload()} />
+
+    <div style="display: flex; flex-direction: row; justify-content: space-between;">
+        <h2>Előzmények</h2>
+    
         <IconButton
-            path={mdiCog}
-            onclick={() => (window.location = `./settings/?cardId=${$page.url.searchParams.get("cardId")}`)}
+            path={mdiDelete}
+            color="white"
+            onclick={() => (card.value = { ...card.value, history: [] })}
         />
     </div>
-</div>
+
+    {#each card.value.history as history}
+        <p>{history}</p>
+    {/each}
+</main>
 
 <style>
+    main {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        padding: 1rem;
+    }
+
     .card {
         position: relative;
-        margin: 1rem;
+        width: 100%;
         border-radius: 1rem;
     }
 
@@ -72,7 +99,6 @@
         align-items: center;
         justify-content: space-evenly;
 
-        width: 100%;
         height: calc(100svh - 2rem);
     }
 </style>

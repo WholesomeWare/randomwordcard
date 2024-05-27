@@ -3,12 +3,13 @@
 
     export let style: string = "";
     export let path: string;
+    export let color: string = "black";
     export let onclick: () => void;
 
 </script>
 
 <button {style} onclick={onclick}>
-    <Icon {path} />
+    <Icon {path} {color} />
 </button>
 
 <style>
