@@ -13,6 +13,10 @@
         color: white;
     }
 
+    :global(p) {
+        font-size: .95rem;
+    }
+
     :global(li) {
         margin-left: 1rem;
     }

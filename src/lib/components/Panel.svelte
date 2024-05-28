@@ -12,9 +12,9 @@
     .container {
         display: flex;
         flex-direction: column;
-        gap: .5rem;
-        padding: .5rem;
-        border-radius: .5rem;
+        gap: 1rem;
+        padding: 1rem;
+        border-radius: 1rem;
         background-color: #323232;
     }
 </style>
