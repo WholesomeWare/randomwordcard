@@ -7,6 +7,7 @@
         mdiCheck,
         mdiClose,
         mdiContentCopy,
+        mdiHistory,
         mdiPencil,
         mdiPlus,
     } from "@mdi/js";
@@ -22,6 +23,7 @@
     import Panel from "$lib/components/Panel.svelte";
     import CardSlot from "$lib/model/CardSlot";
     import { getWords } from "$lib/wordsProvider";
+    import Footer from "$lib/components/Footer.svelte";
 
     let card = $state(firestoreCard(null));
     let wordPacks: WordPack[] = $state([]);
@@ -33,12 +35,13 @@
 
     $effect(() => {
         card.value;
-        getWords(card, (words) => testWords = words);
-    })
+        getWords(card, (words) => (testWords = words));
+    });
 
     onMount(() => {
-        card = firestoreCard($page.url.searchParams.get("cardId"));
-        getWordPacks((newWordPacks) => (wordPacks = newWordPacks));
+        const cardId = $page.url.searchParams.get("cardId");
+        card = firestoreCard(cardId);
+        getWordPacks(cardId, (newWordPacks) => (wordPacks = newWordPacks));
     });
 </script>
 
@@ -59,7 +62,48 @@
             <div
                 style="display: flex; flex-direction: row; align-items: center; gap: 1rem;"
             >
-                <p style="width: 100%; font-weight: bold;">Blokk #{blockIndex}</p>
+                {#if selectedBlockIndex === blockIndex}
+                    <select
+                        style="width: 100%;"
+                        value={CardSlot.fromJSON(slotJSON).format}
+                        onchange={(e) => {
+                            card.value = {
+                                ...card.value,
+                                slotsJSON: card.value.slotsJSON.map(
+                                    (slot, i) => {
+                                        if (i === blockIndex) {
+                                            switch (e.target?.value) {
+                                                case "plaintext":
+                                                    return CardSlot.plaintext(
+                                                        "",
+                                                    ).toJSON();
+                                                case "wordPacks":
+                                                    return CardSlot.wordPacks(
+                                                        [],
+                                                    ).toJSON();
+                                            }
+                                        }
+                                        return slot;
+                                    },
+                                ),
+                            };
+                        }}
+                    >
+                        <option value="plaintext">Egyszerű szöveg</option>
+                        <option value="wordPacks">Szó csomagok</option>
+                    </select>
+                {:else}
+                    <p style="width: 100%; font-size: .8rem;">
+                        {#if CardSlot.fromJSON(slotJSON).format === "plaintext"}
+                            {CardSlot.fromJSON(slotJSON).value}
+                        {:else if CardSlot.fromJSON(slotJSON).format === "wordPacks"}
+                            {#each CardSlot.fromJSON(slotJSON).value.split(",") as wordPackId}
+                                📦{wordPacks.find((wp) => wp.id === wordPackId)
+                                    ?.name}
+                            {/each}
+                        {/if}
+                    </p>
+                {/if}
                 <IconButton
                     path={blockIndex === selectedBlockIndex
                         ? mdiCheck
@@ -97,43 +141,7 @@
                     }}
                 />
             </div>
-            {#if selectedBlockIndex !== blockIndex}
-                <p style="font-size: .8rem; opacity: .7;">
-                    {#if CardSlot.fromJSON(slotJSON).format === "plaintext"}
-                        {CardSlot.fromJSON(slotJSON).value}
-                    {:else if CardSlot.fromJSON(slotJSON).format === "wordPacks"}
-                        {#each CardSlot.fromJSON(slotJSON).value.split(",") as wordPackId}
-                            📦{wordPacks.find((wp) => wp.id === wordPackId)?.name}
-                        {/each}
-                    {/if}
-                </p>
-            {:else}
-                <select
-                    value={CardSlot.fromJSON(slotJSON).format}
-                    onchange={(e) => {
-                        card.value = {
-                            ...card.value,
-                            slotsJSON: card.value.slotsJSON.map((slot, i) => {
-                                if (i === blockIndex) {
-                                    switch (e.target?.value) {
-                                        case "plaintext":
-                                            return CardSlot.plaintext(
-                                                "",
-                                            ).toJSON();
-                                        case "wordPacks":
-                                            return CardSlot.wordPacks(
-                                                [],
-                                            ).toJSON();
-                                    }
-                                }
-                                return slot;
-                            }),
-                        };
-                    }}
-                >
-                    <option value="plaintext">Egyszerű szöveg</option>
-                    <option value="wordPacks">Szó csomagok</option>
-                </select>
+            {#if selectedBlockIndex === blockIndex}
                 {#if CardSlot.fromJSON(slotJSON).format === "plaintext"}
                     <input
                         type="text"
@@ -212,15 +220,29 @@
         }}
     />
     <h2>Teszt</h2>
-    <p>
-        A jelenlegi beállításokkal ilyen kártya jelenhet meg:
-    </p>
+    <p>A jelenlegi beállításokkal ilyen kártya jelenhet meg:</p>
     <ul>
         {#each testWords as word}
             <li>{word}</li>
         {/each}
     </ul>
+    <h2>Beállítások</h2>
+    <Fab
+        iconPath={mdiHistory}
+        text="Előzmények mentése: {card.value.isSavingHistory ? 'Bekapcsolva' : 'Kikapcsolva'}"
+        onclick={() => {
+            card.value = {
+                ...card.value,
+                isSavingHistory: !card.value.isSavingHistory,
+            };
+        }}
+    />
+    <p style="opacity: .7;">
+        ID: {card.cardId}
+    </p>
 </main>
+
+<Footer />
 
 <Dialog open={isAddWordPackDialogOpen}>
     <h3>Szó csomagok</h3>

@@ -7,3 +7,7 @@ export default class WordPack {
     words: string[] = [];
     tags: string[] = [];
 }
+
+const WORDPACK_TAG_PUBLIC = "public";
+
+export { WORDPACK_TAG_PUBLIC };

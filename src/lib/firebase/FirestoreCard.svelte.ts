@@ -3,6 +3,7 @@ import { doc, getDoc, onSnapshot, setDoc } from "firebase/firestore";
 import { initializeFirebase } from "./firebase";
 import Card from "$lib/model/Card";
 import type { Unsubscribe } from "firebase/app-check";
+import { onDestroy } from "svelte";
 
 export class FirestoreCard {
     #firestore = initializeFirebase().firestore;
@@ -10,6 +11,7 @@ export class FirestoreCard {
     #firestoreListener: Unsubscribe | null = null;
     value: Card = $state<Card>(new Card());
     cardId: string;
+    doAutoUpdate: boolean = true;
 
     constructor(cardId: string | null) {
         this.cardId = cardId ?? "";
@@ -39,14 +41,20 @@ export class FirestoreCard {
 
         $effect(() => {
             this.value;
-            if (this.#isReady) {
-                setDoc(doc(this.#firestore, "cards", cardId), this.value);
+            if (this.#isReady && this.doAutoUpdate) {
+                this.updateDatabase();
             }
+        });
+
+        onDestroy(() => {
+            this.#firestoreListener?.();
         });
     }
 
-    destroy() {
-        this.#firestoreListener?.();
+    updateDatabase() {
+        if (this.#isReady) {
+            setDoc(doc(this.#firestore, "cards", this.cardId), this.value);
+        }
     }
 }
 

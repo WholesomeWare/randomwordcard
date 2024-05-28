@@ -4,7 +4,7 @@ import CardSlot from "./model/CardSlot";
 import type WordPack from "./model/WordPack";
 
 export function getWords(card: FirestoreCard, callback: (slots: string[]) => void) {
-    getWordPacks((wordPacks) => {
+    getWordPacks(card.cardId, (wordPacks) => {
         const slots: string[] = card.value.slotsJSON.map((slotJSON) => {
             const slot = CardSlot.fromJSON(slotJSON);
 

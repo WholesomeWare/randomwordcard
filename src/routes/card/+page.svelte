@@ -1,12 +1,11 @@
 <script lang="ts">
     import { onMount } from "svelte";
     import { page } from "$app/stores";
-    import { getWordPacks } from "$lib/firebase/wordPackProvider";
     import { mdiCog, mdiDelete, mdiRefresh } from "@mdi/js";
     import { firestoreCard } from "$lib/firebase/FirestoreCard.svelte";
     import IconButton from "$lib/components/IconButton.svelte";
-    import Fab from "$lib/components/Fab.svelte";
     import { getWords } from "$lib/wordsProvider";
+    import Footer from "$lib/components/Footer.svelte";
 
     let card = $state(firestoreCard(null));
 
@@ -20,9 +19,15 @@
 
         getWords(card, (words) => {
             randomWords = words;
-            card.value.history = [words.join(", "), ...card.value.history];
+            if (card.value.isSavingHistory === true) {
+                card.value.history = [words.join(", "), ...card.value.history];
+            } else if (card.value.history.length > 0) {
+                card.value.history = [];
+            }
         });
     });
+
+    
 </script>
 
 <main>
@@ -33,7 +38,11 @@
             {/each}
         </div>
         <div class="card-actions">
-            <IconButton path={mdiRefresh} size={32} onclick={() => location.reload()} />
+            <IconButton
+                path={mdiRefresh}
+                size={32}
+                onclick={() => location.reload()}
+            />
             <IconButton
                 path={mdiCog}
                 size={32}
@@ -43,20 +52,26 @@
         </div>
     </div>
 
-    <div style="display: flex; flex-direction: row; justify-content: space-between;">
-        <h2>Előzmények</h2>
-    
-        <IconButton
-            path={mdiDelete}
-            color="white"
-            onclick={() => (card.value = { ...card.value, history: [] })}
-        />
-    </div>
+    {#if card.value.isSavingHistory === true}
+        <div
+            style="display: flex; flex-direction: row; justify-content: space-between;"
+        >
+            <h2>Előzmények</h2>
 
-    {#each card.value.history as history}
-        <p>{history}</p>
-    {/each}
+            <IconButton
+                path={mdiDelete}
+                color="white"
+                onclick={() => (card.value = { ...card.value, history: [] })}
+            />
+        </div>
+
+        {#each card.value.history as history}
+            <p>{history}</p>
+        {/each}
+    {/if}
 </main>
+
+<Footer />
 
 <style>
     main {
@@ -80,7 +95,7 @@
         position: absolute;
         top: 0;
         right: 0;
-        opacity: .3;
+        opacity: 0.3;
     }
 
     .card-words {
