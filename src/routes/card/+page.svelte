@@ -18,7 +18,10 @@
 
         randomColor = `rgb(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)})`;
 
-        getWords(card, (words) => randomWords = words);
+        getWords(card, (words) => {
+            randomWords = words;
+            card.value.history = [words.join(", "), ...card.value.history];
+        });
     });
 </script>
 
@@ -85,6 +88,8 @@
         flex-direction: column;
         align-items: center;
         justify-content: space-evenly;
+        padding: 1rem;
+        text-align: center;
 
         height: calc(100svh - 2rem);
     }

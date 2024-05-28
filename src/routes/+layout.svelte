@@ -16,4 +16,10 @@
     :global(li) {
         margin-left: 1rem;
     }
+
+    :global(input[type="text"], select) {
+        padding: 0.5rem;
+        border: none;
+        border-radius: 0.5rem;
+    }
 </style>

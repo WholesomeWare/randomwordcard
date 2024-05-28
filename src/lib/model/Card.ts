@@ -1,5 +1,5 @@
 export default class Card {
     id: string = "";
-    activeWordPacks: string[] = [];
+    slotsJSON: string[] = [];
     history: string[] = [];
 }

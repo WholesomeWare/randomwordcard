@@ -8,12 +8,12 @@
 
     let {
         wordPack,
-        onAdd,
-        onRemove,
+        onAdd = undefined,
+        onRemove = undefined,
     }: {
         wordPack: WordPack;
-        onAdd: (() => void) | null;
-        onRemove: (() => void) | null;
+        onAdd: (() => void) | undefined;
+        onRemove: (() => void) | undefined;
     } = $props();
 
     let isMenuOpen = $state(false);

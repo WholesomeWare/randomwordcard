@@ -14,7 +14,7 @@
     onclick={() => {
         card.value = {
             ...card.value,
-            activeWordPacks: [...card.value.activeWordPacks, "test"],
+            slots: [...card.value.slots, "test"],
         };
     }}
 >

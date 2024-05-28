@@ -1,35 +1,29 @@
 import type { FirestoreCard } from "./firebase/FirestoreCard.svelte";
 import { getWordPacks } from "./firebase/wordPackProvider";
+import CardSlot from "./model/CardSlot";
+import type WordPack from "./model/WordPack";
 
-export function getWords(card: FirestoreCard, callback: (words: string[]) => void) {
+export function getWords(card: FirestoreCard, callback: (slots: string[]) => void) {
     getWordPacks((wordPacks) => {
-        const randomElements =
-            card.value.activeWordPacks
-                .map((wordPackId) => {
-                    const wordPack = wordPacks.find((wordPack) => wordPack.id === wordPackId);
-                    const words: string[] = wordPack?.words ?? [];
+        const slots: string[] = card.value.slotsJSON.map((slotJSON) => {
+            const slot = CardSlot.fromJSON(slotJSON);
 
-                    return { source: wordPack, word: words[Math.floor(Math.random() * words.length)] };
-                })
-                .filter((word) => word !== undefined) ?? [];
+            switch (slot.format) {
+                case "plaintext":
+                    return slot.value;
+                case "wordPacks": {
+                    const packs = slot.value.split(",")
+                        .map((id) => wordPacks.find((pack) => pack.id === id))
+                        .filter((pack) => pack !== undefined)
+                        .map((pack) => pack as WordPack);
+                    const words = packs.flatMap((pack) => pack.words);
+                    return words[Math.floor(Math.random() * words.length)];
+                }
+                default:
+                    return "";
+            }
+        });
 
-        if (randomElements.length === 0 || randomElements.join("").trim().length === 0) {
-            callback([]);
-            return;
-        }
-
-        const randomWords: string[] = randomElements.map((element) => {
-            return {
-                plaintext: element.word,
-            }[element.source?.format ?? "plaintext"];
-        })
-            .filter((word) => word !== undefined)
-            .map((word) => word as string);
-
-        card.value = {
-            ...card.value,
-            history: [randomWords.join(", "), ...card.value.history],
-        };
-        callback(randomWords);
+        callback(slots);
     });
 }

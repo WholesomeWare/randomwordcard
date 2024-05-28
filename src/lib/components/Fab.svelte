@@ -21,8 +21,8 @@
         flex-direction: row;
         align-items: center;
         justify-content: center;
-        gap: 0.5rem;
-        padding: 1rem;
+        gap: .5rem;
+        padding: .5rem;
         border: none;
         border-radius: .5rem;
         color: white;
