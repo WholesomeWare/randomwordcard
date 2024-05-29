@@ -23,7 +23,7 @@ li {
     margin-left: 1rem;
 }
 
-input[type="text"], select {
+input[type="text"], select, textarea {
     padding: 0.5rem;
     border: none;
     border-radius: 0.5rem;

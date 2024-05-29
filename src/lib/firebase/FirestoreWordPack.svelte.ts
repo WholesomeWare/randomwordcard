@@ -1,39 +1,39 @@
 import { browser } from "$app/environment";
 import { doc, getDoc, onSnapshot, setDoc } from "firebase/firestore";
 import { initializeFirebase } from "./firebase";
-import Card from "$lib/model/Card";
 import type { Unsubscribe } from "firebase/app-check";
 import { onDestroy } from "svelte";
+import WordPack from "$lib/model/WordPack";
 
-export class FirestoreCard {
+export class FirestoreWordPack {
     #firestore = initializeFirebase().firestore;
     isReady = false;
     #firestoreListener: Unsubscribe | null = null;
-    value: Card = $state<Card>(new Card());
-    cardId: string;
+    value: WordPack = $state<WordPack>(new WordPack());
+    wordPackId: string;
     doAutoUpdate: boolean = true;
 
-    constructor(cardId: string | null) {
-        this.cardId = cardId ?? "";
+    constructor(wordPackId: string | null) {
+        this.wordPackId = wordPackId ?? "";
 
-        if (!cardId) return;
+        if (!wordPackId) return;
 
         if (browser) {
-            getDoc(doc(this.#firestore, "cards", cardId))
+            getDoc(doc(this.#firestore, "wordPacks", wordPackId))
                 .then((doc) => {
                     if (doc.exists()) {
-                        this.value = { ...new Card(), ...doc.data(), id: doc.id };
+                        this.value = { ...new WordPack(), ...doc.data(), id: doc.id };
                     }
                     this.isReady = true;
                 })
                 .catch((error) => {
                     console.error("Error getting document:", error);
-                    console.log("Card loaded:", this.value);
+                    console.log("Word pack loaded:", this.value);
                 });
 
-            this.#firestoreListener = onSnapshot(doc(this.#firestore, "cards", cardId), (doc) => {
+            this.#firestoreListener = onSnapshot(doc(this.#firestore, "cards", wordPackId), (doc) => {
                 if (doc.exists()) {
-                    this.value = { ...new Card(), ...doc.data(), id: doc.id };
+                    this.value = { ...new WordPack(), ...doc.data(), id: doc.id };
                 }
             });
         }
@@ -52,11 +52,11 @@ export class FirestoreCard {
 
     updateDatabase() {
         if (this.isReady) {
-            setDoc(doc(this.#firestore, "cards", this.cardId), this.value);
+            setDoc(doc(this.#firestore, "wordPacks", this.wordPackId), this.value);
         }
     }
 }
 
-export function firestoreCard(cardId: string | null): FirestoreCard {
-    return new FirestoreCard(cardId);
+export function firestoreWordPack(wordPackId: string | null): FirestoreWordPack {
+    return new FirestoreWordPack(wordPackId);
 }

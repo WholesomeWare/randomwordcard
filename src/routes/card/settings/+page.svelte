@@ -169,6 +169,7 @@
                                 wordPack={wordPacks.find(
                                     (wp) => wp.id === wordPackId,
                                 )}
+                                currentCardId={card.cardId}
                                 onRemove={() => {
                                     card.value = {
                                         ...card.value,
@@ -229,7 +230,9 @@
     <h2>Beállítások</h2>
     <Fab
         iconPath={mdiHistory}
-        text="Előzmények mentése: {card.value.isSavingHistory ? 'Bekapcsolva' : 'Kikapcsolva'}"
+        text="Előzmények mentése: {card.value.isSavingHistory
+            ? 'Bekapcsolva'
+            : 'Kikapcsolva'}"
         onclick={() => {
             card.value = {
                 ...card.value,
@@ -237,7 +240,12 @@
             };
         }}
     />
-    <p style="opacity: .7;">
+    <Panel>
+        <p style="font-family: 'Courier New', Courier, monospace;">
+            {card.value.hardcodedMessage}
+        </p>
+    </Panel>
+    <p style="color: #888;">
         ID: {card.cardId}
     </p>
 </main>
@@ -249,6 +257,7 @@
     {#each wordPacks as wordPack}
         <WordPackDisplay
             {wordPack}
+            currentCardId={card.cardId}
             onAdd={() => {
                 card.value = {
                     ...card.value,
@@ -280,5 +289,9 @@
         padding: 1rem;
         gap: 1rem;
         color: white;
+    }
+
+    h2 {
+        padding-top: 2rem;
     }
 </style>

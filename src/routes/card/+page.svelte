@@ -26,8 +26,6 @@
             }
         });
     });
-
-    
 </script>
 
 <main>
@@ -107,5 +105,10 @@
         text-align: center;
 
         height: calc(100svh - 2rem);
+        text-shadow:
+            2px 2px 1px #222,
+            -2px 2px 1px #222,
+            -2px -2px 0 #222,
+            2px -2px 0 #222;
     }
 </style>

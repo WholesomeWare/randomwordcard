@@ -1,6 +1,13 @@
 <script lang="ts">
     import type WordPack from "$lib/model/WordPack";
-    import { mdiListBox, mdiClose, mdiPlus, mdiMenu, mdiDotsVertical } from "@mdi/js";
+    import {
+        mdiListBox,
+        mdiClose,
+        mdiPlus,
+        mdiMenu,
+        mdiDotsVertical,
+        mdiPencil,
+    } from "@mdi/js";
     import Icon from "./Icon.svelte";
     import IconButton from "./IconButton.svelte";
     import Dialog from "./Dialog.svelte";
@@ -8,10 +15,12 @@
 
     let {
         wordPack,
+        currentCardId = "",
         onAdd = undefined,
         onRemove = undefined,
     }: {
         wordPack: WordPack;
+        currentCardId: string;
         onAdd: (() => void) | undefined;
         onRemove: (() => void) | undefined;
     } = $props();
@@ -20,12 +29,12 @@
 </script>
 
 <div class="wordPackDisplay">
-        <Icon path={mdiListBox} />
-        <p>{wordPack.name}</p>
-        {#if onAdd}
-            <IconButton path={mdiPlus} onclick={onAdd} />
-        {/if}
-        <IconButton path={mdiDotsVertical} onclick={() => (isMenuOpen = true)} />
+    <Icon path={mdiListBox} />
+    <p>{wordPack.name}</p>
+    {#if onAdd}
+        <IconButton path={mdiPlus} onclick={onAdd} />
+    {/if}
+    <IconButton path={mdiDotsVertical} onclick={() => (isMenuOpen = true)} />
 </div>
 
 <Dialog open={isMenuOpen}>
@@ -33,9 +42,22 @@
         style="display: flex; flex-direction: row; align-items: center; justify-content: space-between;"
     >
         <h3>{wordPack.name} ({wordPack.words.length})</h3>
-        <IconButton path={mdiClose} color="white" onclick={() => (isMenuOpen = false)} />
+        <IconButton
+            path={mdiClose}
+            color="white"
+            onclick={() => (isMenuOpen = false)}
+        />
     </div>
     <p>{wordPack.description}</p>
+    {#if currentCardId === wordPack.ownerCardId}
+        <Fab
+            iconPath={mdiPencil}
+            text="Szerkesztés"
+            onclick={() => {
+                window.location = `/wordpack/?cardId=${currentCardId}&wordPackId=${wordPack.id}`;
+            }}
+        />
+    {/if}
     {#if onRemove}
         <Fab
             iconPath={mdiClose}
