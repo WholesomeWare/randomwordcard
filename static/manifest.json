@@ -1,0 +1,25 @@
+{
+    "background_color": "#282828",
+    "dir": "ltr",
+    "display": "standalone",
+    "name": "Random Szókártya",
+    "orientation": "portrait",
+    "scope": "/",
+    "short_name": "Rdm Szókártya",
+    "start_url": "/",
+    "theme_color": "#ff0000",
+    "icons": [
+      {
+        "src": "./favicon.png",
+        "type": "image/png",
+        "sizes": "128x128"
+      }
+    ],
+    "id": "randomwordcard",
+    "lang": "hu",
+    "categories": [
+      "education",
+      "entertainment",
+      "games"
+    ]
+  }

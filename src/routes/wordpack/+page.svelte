@@ -52,7 +52,13 @@
         iconPath={mdiContentSave}
         text="Mentés"
         onclick={() => {
-            wordPack.updateDatabase();
+            wordPack.updateDatabase((isSuccessful) => {
+                if (isSuccessful) {
+                    alert("Sikeres mentés!");
+                } else {
+                    alert("Sikertelen mentés!");
+                }
+            });
         }}
     />
     <Fab

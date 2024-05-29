@@ -50,9 +50,16 @@ export class FirestoreWordPack {
         });
     }
 
-    updateDatabase() {
+    updateDatabase(onSaved: (isSuccessful: boolean) => void = () => {}) {
         if (this.isReady) {
-            setDoc(doc(this.#firestore, "wordPacks", this.wordPackId), this.value);
+            setDoc(doc(this.#firestore, "wordPacks", this.wordPackId), this.value)
+                .then(() => {
+                    onSaved(true);
+                })
+                .catch((error) => {
+                    console.error("Error updating document:", error);
+                    onSaved(false);
+                });
         }
     }
 }

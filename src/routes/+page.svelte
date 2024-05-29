@@ -1,22 +1,14 @@
-<script>
-    import { firestoreCard } from "$lib/firebase/FirestoreCard.svelte";
+<main>
+    <h1>Random Szókártya</h1>
 
-    const testCardId = "SRUqOSs1pDFmdQCmUCMP";
+    <p>Érintsd a telefonod egy kártyához a kezdéshez.</p>
+</main>
 
-    let card = firestoreCard(testCardId);
-</script>
-
-<p>
-    {JSON.stringify(card.value)}
-</p>
-
-<button
-    onclick={() => {
-        card.value = {
-            ...card.value,
-            slots: [...card.value.slots, "test"],
-        };
-    }}
->
-    Add test word pack
-</button>
+<style>
+    main {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        padding: 1rem;
+    }
+</style>

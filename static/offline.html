@@ -1,0 +1,56 @@
+<head>
+    <style>
+        main {
+            display: flex;
+            flex-direction: column;
+            padding: 1rem;
+            gap: 1rem;
+            width: 100%;
+            height: 100dvh;
+        }
+
+        .card {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+            border-radius: 1rem;
+        }
+    </style>
+</head>
+
+<body>
+    <main>
+        <h1>Offline mód</h1>
+        <p>
+            Csatlakozz az internethez, hogy a kártyád helyesen működjön. Ne aggódj,
+            a kártyád beállításai megmaradnak. Addig is itt egy random szó:
+        </p>
+        <div id="card">
+            <h1 id="randomWord"></h1>
+        </div>
+    </main>
+
+    <script>
+        const words = [
+            "WiFi",
+            "internet",
+            "kábel",
+            "dínó",
+            "számítógép",
+            "telefon",
+            "térerő",
+            "szerver",
+            "tűzfal",
+            "kapcsoló",
+            "adatbázis",
+        ];
+
+        let randomColor = Math.floor(Math.random() * 16777215).toString(16);
+        let randomWord = words[Math.floor(Math.random() * words.length)];
+
+        document.getElementById("card").style.backgroundColor = `#${randomColor}`;
+        document.getElementById("randomWord").innerText = randomWord;
+    </script>
+</body>
