@@ -20,9 +20,12 @@
         getWords(card, (words) => {
             randomWords = words;
             if (card.value.isSavingHistory === true) {
-                card.value.history = [words.join(", "), ...card.value.history];
-            } else if (card.value.history.length > 0) {
-                card.value.history = [];
+                if (words.length > 0 && words.join("").length > 0) {
+                    card.value.history = [
+                        words.join(", "),
+                        ...card.value.history,
+                    ];
+                }
             }
         });
     });
