@@ -24,7 +24,7 @@
         gap: .5rem;
         padding: .5rem;
         border: none;
-        border-radius: .5rem;
+        border-radius: 2rem;
         color: white;
         cursor: pointer;
     }

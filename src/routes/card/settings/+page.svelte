@@ -5,7 +5,7 @@
         getAllWordPacks,
         wordPackIsVisible,
     } from "$lib/firebase/wordPackProvider";
-    import { mdiHistory, mdiPlus } from "@mdi/js";
+    import { mdiFlask, mdiHistory, mdiPlus } from "@mdi/js";
     import WordPack, { WORDPACK_TAG_PUBLIC } from "$lib/model/WordPack";
     import { firestoreCard } from "$lib/firebase/FirestoreCard.svelte";
     import Fab from "$lib/components/Fab.svelte";
@@ -34,11 +34,6 @@
     let selectedBlockIndex: number = $state(-1);
 
     let testWords: string[] = $state([]);
-
-    $effect(() => {
-        card.value.slotsJSON;
-        getWords(card, (words) => (testWords = words));
-    });
 
     $effect(() => {
         card.doAutoUpdate = selectedBlockIndex === -1;
@@ -97,13 +92,15 @@
                 selectedBlockIndex = card.value.slotsJSON.length - 1;
             }}
         />
-        <h2>Teszt</h2>
-        <p>A jelenlegi beállításokkal ilyen kártya jelenhet meg:</p>
-        <ul>
-            {#each testWords as word}
-                <li>{word}</li>
-            {/each}
-        </ul>
+        <Fab
+            iconPath={mdiFlask}
+            text="Teszt"
+            onclick={() => {
+                getWords(card, (words) => {
+                    alert("A jelenlegi beállításokkal ilyen kártya jelenhet meg:\n- " + words.join("\n- "));
+                });
+            }}
+        />
         <h2>Beállítások</h2>
         <Fab
             iconPath={mdiHistory}
