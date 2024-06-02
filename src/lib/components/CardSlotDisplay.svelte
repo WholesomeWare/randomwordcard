@@ -55,7 +55,7 @@
                                         return CardSlot.wordPacks([]).toJSON();
                                 }
                             }
-                            return cardSlot;
+                            return slot;
                         }),
                     };
                 }}

@@ -29,8 +29,9 @@
 </script>
 
 <main>
-    <input class="title" type="text" bind:value={wordPack.value.name} />
+    <input placeholder="Csomag neve" class="title" type="text" bind:value={wordPack.value.name} />
     <textarea
+        placeholder="Leírás..."
         rows="3"
         oninput={(e) => {
             wordPack.value = {
@@ -40,6 +41,7 @@
         }}>{wordPack.value.description}</textarea
     >
     <textarea
+        placeholder="Szavak soronként"
         rows="10"
         oninput={(e) => {
             wordPack.value = {
@@ -76,6 +78,10 @@
         flex-direction: column;
         padding: 1rem;
         gap: 1rem;
+    }
+
+    textarea {
+        resize: vertical;
     }
 
     .title {

@@ -3,12 +3,12 @@ import { initializeFirebase } from "./firebase";
 import WordPack from "$lib/model/WordPack";
 import { browser } from "$app/environment";
 
-function isVisibleToUser(wordPack: WordPack, cardId: string | null) {
+export function wordPackIsVisible(wordPack: WordPack, cardId: string | null) {
     return wordPack.tags.includes("public") ||
         wordPack.ownerCardId === cardId;
 }
 
-export function getWordPacks(currentCardId: string | null, callback: (wordPacks: WordPack[]) => void) {
+export function getAllWordPacks(callback: (wordPacks: WordPack[]) => void) {
     if (!browser) return;
 
     const { firestore } = initializeFirebase();
@@ -18,10 +18,16 @@ export function getWordPacks(currentCardId: string | null, callback: (wordPacks:
             const wordPacks = querySnapshot.docs.map((doc) => {
                 return { ...new WordPack(), ...doc.data(), id: doc.id };
             });
-            callback(wordPacks.filter((wordPack) => isVisibleToUser(wordPack, currentCardId)));
+            callback(wordPacks);
         })
         .catch((error) => {
             console.error("Error getting word packs: ", error);
             callback([]);
         });
+}
+
+export function getVisibleWordPacks(currentCardId: string | null, callback: (wordPacks: WordPack[]) => void) {
+    getAllWordPacks((wordPacks) => {
+        callback(wordPacks.filter((wordPack) => wordPackIsVisible(wordPack, currentCardId)));
+    });
 }

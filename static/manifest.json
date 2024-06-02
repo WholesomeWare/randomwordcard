@@ -1,5 +1,5 @@
 {
-    "background_color": "#282828",
+    "background_color": "#484848",
     "dir": "ltr",
     "display": "standalone",
     "name": "Random Szókártya",
@@ -7,7 +7,7 @@
     "scope": "/",
     "short_name": "Rdm Szókártya",
     "start_url": "/",
-    "theme_color": "#ff0000",
+    "theme_color": "#f7665f",
     "icons": [
       {
         "src": "./favicon.png",

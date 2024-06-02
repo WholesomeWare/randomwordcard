@@ -1,10 +1,10 @@
 import type { FirestoreCard } from "./firebase/FirestoreCard.svelte";
-import { getWordPacks } from "./firebase/wordPackProvider";
+import { getVisibleWordPacks } from "./firebase/wordPackProvider";
 import CardSlot from "./model/CardSlot";
 import type WordPack from "./model/WordPack";
 
 export function getWords(card: FirestoreCard, callback: (slots: string[]) => void) {
-    getWordPacks(card.cardId, (wordPacks) => {
+    getVisibleWordPacks(card.cardId, (wordPacks) => {
         const slots: string[] = card.value.slotsJSON.map((slotJSON) => {
             const slot = CardSlot.fromJSON(slotJSON);
 
