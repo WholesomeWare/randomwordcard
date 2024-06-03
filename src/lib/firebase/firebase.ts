@@ -1,5 +1,5 @@
 import { initializeApp, type FirebaseApp } from "firebase/app";
-import { getFirestore, type Firestore } from "firebase/firestore";
+import { getFirestore, initializeFirestore, persistentLocalCache, type Firestore } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCSTHVjipXjNuFRhn8AvxSa8-w-rQUCnss",
@@ -13,6 +13,7 @@ const firebaseConfig = {
 
 export function initializeFirebase(): { app: FirebaseApp, firestore: Firestore } {
     const app = initializeApp(firebaseConfig);
+    initializeFirestore(app, {localCache: persistentLocalCache()});
     const firestore = getFirestore(app);
     
     return { app, firestore };
