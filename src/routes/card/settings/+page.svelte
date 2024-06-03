@@ -5,7 +5,14 @@
         getAllWordPacks,
         wordPackIsVisible,
     } from "$lib/firebase/wordPackProvider";
-    import { mdiFlask, mdiHistory, mdiPlus } from "@mdi/js";
+    import {
+        mdiFlask,
+        mdiHelp,
+        mdiHelpCircle,
+        mdiHelpCircleOutline,
+        mdiHistory,
+        mdiPlus,
+    } from "@mdi/js";
     import WordPack, { WORDPACK_TAG_PUBLIC } from "$lib/model/WordPack";
     import { firestoreCard } from "$lib/firebase/FirestoreCard.svelte";
     import Fab from "$lib/components/Fab.svelte";
@@ -97,7 +104,10 @@
             text="Teszt"
             onclick={() => {
                 getWords(card, (words) => {
-                    alert("A jelenlegi beállításokkal ilyen kártya jelenhet meg:\n- " + words.join("\n- "));
+                    alert(
+                        "A jelenlegi beállításokkal ilyen kártya jelenhet meg:\n- " +
+                            words.join("\n- "),
+                    );
                 });
             }}
         />
@@ -164,6 +174,24 @@
                     .catch((error) => {
                         alert("Sikertelen létrehozás!");
                     });
+            }}
+        />
+        <h2>Kölcsön kapott csomagok</h2>
+        {#each allWordPacks as wordPack}
+            {#if wordPack.enabledCardIds.includes(card.cardId)}
+                <WordPackDisplay
+                    currentCardId={card.cardId}
+                    {wordPack}
+                />
+            {/if}
+        {/each}
+        <Fab
+            iconPath={mdiHelpCircleOutline}
+            text="Hogyan kaphatok mástól szavakat?"
+            onclick={() => {
+                alert(
+                    `A kártyád azonosítóját kell megadnod a másik félnek: "${card.cardId}" Ezt a "Kártya" lap alján is megtalálod. Ezt kell a másik félnek a "Kölcsönző kártyák azonosítója soronként" mezőbe beírnia a szócsomag szerkesztésekor.`,
+                );
             }}
         />
         <h2>Beépített szó csomagok</h2>

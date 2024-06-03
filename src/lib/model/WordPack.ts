@@ -5,6 +5,7 @@ export default class WordPack {
     description: string = "";
     format: string = "";
     words: string[] = [];
+    enabledCardIds: string[] = [];
     tags: string[] = [];
 }
 

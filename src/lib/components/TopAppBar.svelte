@@ -28,7 +28,7 @@
                 color="white"
             />
         {/if}
-        <h3>Beállítások</h3>
+        <h3>{title}</h3>
     </div>
     <div class="tabs">
         {#each tabs as tab, index}

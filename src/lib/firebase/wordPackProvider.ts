@@ -5,7 +5,8 @@ import { browser } from "$app/environment";
 
 export function wordPackIsVisible(wordPack: WordPack, cardId: string | null) {
     return wordPack.tags.includes("public") ||
-        wordPack.ownerCardId === cardId;
+        wordPack.ownerCardId === cardId ||
+        (cardId && wordPack.enabledCardIds.includes(cardId));
 }
 
 export function getAllWordPacks(callback: (wordPacks: WordPack[]) => void) {
