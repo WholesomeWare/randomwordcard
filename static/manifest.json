@@ -10,9 +10,10 @@
     "theme_color": "#f7665f",
     "icons": [
       {
-        "src": "./favicon.png",
+        "src": "./icon.png",
         "type": "image/png",
-        "sizes": "128x128"
+        "sizes": "512x512",
+        "purpose": "maskable"
       }
     ],
     "id": "randomwordcard",
